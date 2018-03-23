@@ -1,38 +1,23 @@
+import java.awt.Color;
+
 import org.opencv.core.*;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.*;
-import org.opencv.imgproc.*;
-
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import org.opencv.imgproc.Imgproc;
 
 public class Main {
 	//TODO Maven or Gradle ...
 	public static void main(String[] args) {
-		Mat img = Imgcodecs.imread("res/images/shapes.gif");
-		displayImage(img);
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		Mat img = Imgcodecs.imread("./res/images/shapes.png");
+		GUI gui = new GUI(800,600);
+		FeatureExtraction fe = new FeatureExtraction();
+		gui.displayImage(ImageUtil.Mat2BufferedImage(fe.detectShape(img)));
 		
 	}
 	
-	public static void displayImage(Mat img) {
-	    Imgproc.resize(img, img, new Size(640, 480));
-	    MatOfByte matOfByte = new MatOfByte();
-	    Imgcodecs.imencode(".jpg", img, matOfByte);
-	    byte[] byteArray = matOfByte.toArray();
-	    BufferedImage bufImage = null;
-	    try {
-	        InputStream in = new ByteArrayInputStream(byteArray);
-	        bufImage = ImageIO.read(in);
-	        JFrame frame = new JFrame();
-	        frame.getContentPane().add(new JLabel(new ImageIcon(bufImage)));
-	        frame.pack();
-	        frame.setVisible(true);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
+	 
+
 
 }
+
