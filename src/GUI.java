@@ -1,23 +1,16 @@
-import java.awt.Button;
-import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class GUI extends JFrame{
 	public int asd;
-	private JPanel imgPanel;
+	private JPanel canvas;
 	public int hLow;
 	public int sLow;
 	public int vLow;
@@ -30,29 +23,21 @@ public class GUI extends JFrame{
 		this.setSize(width, height);
 		this.setLayout(new BoxLayout(getContentPane(),BoxLayout.PAGE_AXIS));
 		init();
-		//this.pack();
 		this.setVisible(true);
-		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public void init() {
-		//fileName = new JTextField();
-		//fileName.setMaximumSize(new Dimension(50,100));
-		//this.add(fileName);
-		imgPanel = new JPanel();
+		canvas = new JPanel();
 		imageLabel = new JLabel();
-		imgPanel.add(imageLabel);
-		this.add(imgPanel);
+		canvas.add(imageLabel);
+		this.add(canvas);
 		addSliders();
 	}
 	
 	public void displayImage(Image img) {
-	    ImageIcon icon=new ImageIcon(img);
-	    //JLabel lbl=new JLabel();
+	    ImageIcon icon = new ImageIcon(img);
 	    imageLabel.setIcon(icon);
-	    //imgPanel.add(lbl);
-	    //imgPanel.setVisible(true);
 	    this.revalidate();
 	}
 
