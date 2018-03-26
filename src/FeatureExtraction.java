@@ -13,7 +13,6 @@ public class FeatureExtraction {
 	
 	public Mat detectShape(Mat img) {
 		Mat edges = new Mat();
-		//Mat result = new Mat();
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 		Mat hierarchy = new Mat();
 		Imgproc.Canny(img, edges, 100, 300);
