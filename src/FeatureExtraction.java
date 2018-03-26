@@ -56,4 +56,11 @@ public class FeatureExtraction {
 		return edges;
 	}
 	
+	public Mat findSign(Mat img , Scalar lowerBound, Scalar upperBound) {
+		Mat hsv = img.clone();
+		Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_BGR2HSV);
+		Core.inRange(hsv, lowerBound, upperBound, hsv);
+		return hsv;
+	}
+	
 }
