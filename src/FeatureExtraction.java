@@ -12,13 +12,13 @@ public class FeatureExtraction {
 	}
 	
 	public Mat detectShape(Mat img) {
-		
 		Mat edges = new Mat();
 		//Mat result = new Mat();
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 		Mat hierarchy = new Mat();
 		Imgproc.Canny(img, edges, 100, 300);
-		Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+		//Imgproc.blur(edges, edges, new Size(2, 2));
+		Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 		
 		//third argument negative = draw all contours...
 		Imgproc.drawContours(img, contours, -1, new Scalar(255,0,0),5);
@@ -41,6 +41,7 @@ public class FeatureExtraction {
 			MatOfPoint c = contours.get(i);
 			
 			curve.fromList(c.toList());
+
 			Imgproc.approxPolyDP(curve, approxCurve, 0.01* Imgproc.arcLength(curve, true), true);
 			if(approxCurve.total() == 3) {
 				System.out.println(i + ": " + " Triangel");
@@ -48,6 +49,8 @@ public class FeatureExtraction {
 				System.out.println(i + ": " + " Fyrkant");
 			}else if(approxCurve.total() > 8) {
 				System.out.println(i + ": " + " Cirkel");
+			}else {
+				System.out.println(i + ": " + approxCurve.total());
 			}
 			
 		}
