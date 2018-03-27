@@ -11,7 +11,7 @@ public class Main {
 		FeatureExtraction fe = new FeatureExtraction();
 		
 
-		gui.displayImage(ImageUtil.Mat2BufferedImage(fe.detectShapeShapeFactor(img)));
+		//gui.displayImage(ImageUtil.Mat2BufferedImage(fe.detectShapeShapeFactor(img)));
 
 		//gui.displayImage(ImageUtil.Mat2BufferedImage(fe.detectShapeCountCurve(img)));
 		//Mat[] images = fe.findSign(img,new Scalar(gui.hLow,gui.sLow,gui.vLow),new Scalar(gui.hHigh,gui.sHigh,gui.vHigh));
@@ -27,7 +27,8 @@ public class Main {
 		
 		while(true) {
 			cap.retrieve(videoFrame);
-			Mat res[] = fe.findSign(videoFrame,new Scalar(gui.hLow,gui.sLow,gui.vLow),new Scalar(gui.hHigh,gui.sHigh,gui.vHigh));
+			//Mat res[] = fe.findSign(videoFrame,new Scalar(gui.hLow,gui.sLow,gui.vLow),new Scalar(gui.hHigh,gui.sHigh,gui.vHigh));
+			Mat res[] = fe.findhoughlines(videoFrame);
 			gui.displayImage(ImageUtil.Mat2BufferedImage(res[0]),ImageUtil.Mat2BufferedImage(res[1]));
 		}
 				

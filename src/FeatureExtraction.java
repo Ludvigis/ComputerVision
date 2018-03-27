@@ -185,4 +185,27 @@ public class FeatureExtraction {
 		return res;
 	}
 	
+	
+	public Mat[] findhoughlines(Mat img){
+		Mat lines = new Mat();
+		Mat img2 = img.clone();
+		Mat edges = new Mat();
+		
+		//Imgproc.cvtColor(img, img2, Imgproc.COLOR_BGR2HSV);
+		//Core.inRange(img2, new Scalar(80,0,80), new Scalar(255,255,255), img2);
+		
+		Imgproc.Canny(img2, edges, 100, 300);
+		
+		//src , result mat , rho , theta , threshold , minlenght, maxgap
+		Imgproc.HoughLinesP(edges, lines, 1, Math.PI/180, 70, 100, 40);
+		
+		for(int i = 0; i < lines.rows();i++){
+			double[] val = lines.get(i, 0);
+			Imgproc.line(img2, new Point(val[0],val[1]), new Point(val[2],val[3]), new Scalar(0,255,0), 3);
+			
+		}
+		Mat res[] = {edges,img2};
+		return res;
+	}
+	
 }
