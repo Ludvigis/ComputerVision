@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -18,9 +19,11 @@ public class GUI extends JFrame{
 	public int sHigh;
 	public int vHigh;
 	private JLabel imageLabel;
+	private JLabel imageLabel2;
 	
 	public GUI(int width, int height) {
 		this.setSize(width, height);
+		
 		this.setLayout(new BoxLayout(getContentPane(),BoxLayout.PAGE_AXIS));
 		init();
 		this.setVisible(true);
@@ -30,7 +33,10 @@ public class GUI extends JFrame{
 	public void init() {
 		canvas = new JPanel();
 		imageLabel = new JLabel();
+		imageLabel2 = new JLabel();
+		imageLabel2.setAlignmentX(RIGHT_ALIGNMENT);
 		canvas.add(imageLabel);
+		canvas.add(imageLabel2);
 		this.add(canvas);
 		addSliders();
 	}
@@ -38,6 +44,14 @@ public class GUI extends JFrame{
 	public void displayImage(Image img) {
 	    ImageIcon icon = new ImageIcon(img);
 	    imageLabel.setIcon(icon);
+	    this.revalidate();
+	}
+	
+	public void displayImage(Image img, Image img2) {
+	    ImageIcon icon = new ImageIcon(img);
+	    ImageIcon icon2 = new ImageIcon(img2);
+	    imageLabel.setIcon(icon);
+	    imageLabel2.setIcon(icon2);
 	    this.revalidate();
 	}
 
