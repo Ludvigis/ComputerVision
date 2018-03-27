@@ -3,6 +3,7 @@ import java.util.List;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.utils.Converters;
 
 public class FeatureExtraction {
 	
@@ -66,11 +67,84 @@ public class FeatureExtraction {
 	}
 	
 	
-	public Mat findSign(Mat img , Scalar lowerBound, Scalar upperBound) {
+	public Mat[] findSign(Mat img , Scalar lowerBound, Scalar upperBound) {
 		Mat hsv = img.clone();
 		Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_BGR2HSV);
 		Core.inRange(hsv, lowerBound, upperBound, hsv);
-		return hsv;
+		//Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_BGR2GRAY);
+		Imgproc.Canny(hsv, hsv, 100, 300);
+		Imgproc.blur(hsv, hsv, new Size(5,5));
+		
+		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+		Mat hierarchy = new Mat();
+		
+		Imgproc.findContours(hsv, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+		
+		double maxArea = 0;
+		int maxAreaIndex = 0;
+		MatOfPoint2f maxCurve = new MatOfPoint2f();
+		
+		MatOfPoint contour = null;
+		MatOfPoint2f approxCurve = new MatOfPoint2f();
+		
+		
+		for(int i = 0; i < contours.size();i++) {
+			contour = contours.get(i);
+			double area = Imgproc.contourArea(contour);
+			if(area > maxArea) {
+				
+				MatOfPoint2f curve = new MatOfPoint2f(contour.toArray());
+				
+				Imgproc.approxPolyDP(curve, approxCurve, 0.04* Imgproc.arcLength(curve, true), true);
+				
+				
+				if(approxCurve.total() == 4) {
+					maxArea = area;
+					maxAreaIndex = i;
+					maxCurve = approxCurve;
+					
+				}
+			}
+		}
+		//maxcurve är inte alltid 4?...
+		if(maxCurve.total() == 4) {
+			double[] corner1 = maxCurve.get(0, 0);
+			Point p1 = new Point(corner1[0],corner1[1]);
+			
+			double[] corner2 = maxCurve.get(1, 0);
+			Point p2 = new Point(corner2[0],corner2[1]);
+
+			double[] corner3 = maxCurve.get(2, 0);
+			Point p3 = new Point(corner3[0],corner3[1]);
+
+			double[] corner4 = maxCurve.get(3, 0);
+			Point p4 = new Point(corner4[0],corner4[1]);
+		
+			Imgproc.circle(img, p1, 10, new Scalar(255,0,0),4);
+			Imgproc.circle(img, p2, 10, new Scalar(255,0,0),4);
+			Imgproc.circle(img, p3, 10, new Scalar(255,0,0),4);
+			Imgproc.circle(img, p4, 10, new Scalar(255,0,0),4);
+			List<Point> cornerList = new ArrayList<Point>();
+			cornerList.add(p1);
+			cornerList.add(p2);
+			cornerList.add(p3);
+			cornerList.add(p4);
+
+			
+			Mat corners = Converters.vector_Point2f_to_Mat(cornerList);
+			
+			//add points to corners...
+			
+			Imgproc.drawContours(img, contours, maxAreaIndex, new Scalar(0,255,0),3);
+			
+			Mat transformationMatrix = new Mat(4,1,CvType.CV_32FC2);
+			Imgproc.getPerspectiveTransform(corners, transformationMatrix);
+		}
+		
+		
+		
+		Mat res[] = {img,hsv};
+		return res;
 	}
 	
 }
