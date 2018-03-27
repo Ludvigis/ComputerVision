@@ -30,7 +30,7 @@ public class ImageUtil {
 	}
 	
 	//Function to convert to MatOfPoint2f from MatOfPoint.
-	public MatOfPoint2f MatOfPoint2fToMatOfPoint(MatOfPoint srcMat){
+	public static MatOfPoint2f MatOfPoint2fToMatOfPoint(MatOfPoint srcMat){
 		MatOfPoint2f mat = new MatOfPoint2f();
 		srcMat.convertTo(mat,CvType.CV_32F);
 		return mat;

@@ -10,7 +10,7 @@ public class Main {
 		GUI gui = new GUI(800,800);
 		FeatureExtraction fe = new FeatureExtraction();
 		
-		gui.displayImage(ImageUtil.Mat2BufferedImage(fe.detectShapeCountCurve(img)));
+		gui.displayImage(ImageUtil.Mat2BufferedImage(fe.detectShapeShapeFactor(img)));
 		
 		
 		/*VideoCapture cap = new VideoCapture(0);

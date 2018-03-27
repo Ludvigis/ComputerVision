@@ -53,12 +53,50 @@ public class FeatureExtraction {
 	}
 	
 	public Mat detectShapeShapeFactor(Mat img){
+		String shape = "";
 		Mat edges = new Mat();
 		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 		Mat hierarchy = new Mat();
-		Imgproc.Canny(img, edges, 100, 300);
-		//Imgproc.blur(edges, edges, new Size(2, 2));
-		Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.Canny(img, edges, 100, 250);
+		Imgproc.blur(edges, edges, new Size(2, 2));
+		Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+		
+		
+		for(int i = 0 ; i < contours.size();i++){
+			MatOfPoint2f contmat = ImageUtil.MatOfPoint2fToMatOfPoint(contours.get(i));
+			double perimeter = Imgproc.arcLength(contmat, true);
+			double area = Imgproc.contourArea(contmat);
+			
+			//Imgproc.drawContours(img, contours, i, new Scalar(0,0,0));
+			Rect rect = Imgproc.boundingRect(contours.get(i));
+			int centerX = rect.x + rect.width/2;
+			int centerY = rect.y + rect.height/2;
+			
+			//marks center
+			Imgproc.circle(img,new Point(centerX,centerY),8,new Scalar(0,0,0),-1);
+			
+			//approximate number of edges.
+			MatOfPoint2f approxCurve = new MatOfPoint2f();
+			MatOfPoint2f curve = new MatOfPoint2f();
+			curve.fromList(contmat.toList());
+			
+			Imgproc.approxPolyDP(curve, approxCurve, 0.015* Imgproc.arcLength(curve, true), true);
+			if(approxCurve.total() == 3) {
+				shape = "Triangel Area: " + area ;
+			}else if(approxCurve.total() == 4) {
+				shape = "Rectangel Area: " + area;
+			}else if(approxCurve.total()  > 6) {
+				shape = "Cirkel Area: " + area;
+			}else {
+				shape = "No shape detected for object";
+			}
+			
+			
+			//writes out contour integer.
+			Imgproc.putText(img, Integer.toString(i)+ " " +Long.toString(approxCurve.total()), new Point(centerX + 10,centerY - 10), Core.FONT_HERSHEY_SIMPLEX, 0.5 , new Scalar(0,0,0));
+			
+			System.out.println("Shape " + i + " " + shape);
+		}
 		
 		
 		return img;
